@@ -1,0 +1,2 @@
+	$app = Get-WmiObject win32_product | Where-Object {$_.name -match '"'$ProductName'"'}
+	$app.uninstall() | Select-Object -Property returnvalue
