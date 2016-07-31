@@ -11,6 +11,7 @@ download_rdp.php
 
 **********************************************************************/
 
+require_once('config.php');
 
 
 
@@ -76,15 +77,16 @@ fwrite($temp, "kdcproxyname:s:\r\n");
 
 
 list($cn, $dn, $ds) = explode(".", $str_q);
-if ($dn == 'MKUCOU')
+
+if ($dn == $domainname1)
 {
-	fwrite($temp, "gatewayhostname:s:rdp.mkucou.ru\r\n");
-} else if ($dn == 'UKRGO')
+	fwrite($temp, $domaingateway1);
+} else if ($dn == $domainname2)
 {
-	fwrite($temp, "gatewayhostname:s:ukrgo.remotewebaccess.com\r\n");
-} else if ($dn == 'RKM')
+	fwrite($temp, $domaingateway2);
+} else if ($dn == $domainname3)
 {
-	fwrite($temp, "gatewayhostname:s:ukrgo-rkm.remotewebaccess.com\r\n");
+	fwrite($temp, $domaingateway3);
 }
 
 

@@ -16,13 +16,7 @@ computer.php
 //require('staff.inc.php');
 //require_once(STAFFINC_DIR.'header.inc.php');
 
-?>
-
-
-
-<?php
 echo "<br />";
-
 echo "<link type='text/css' rel='stylesheet' href='css/monit.css'>";
 
 
@@ -38,17 +32,9 @@ else
 echo "<h2>" . $str_q . "</h2>";
 echo "<a class='refresh' href='index.php'><b>Компьютеры</b></a><br />";
 
-try {
 
-$conn = new PDO("sqlsrv:Server=BD2\SQLEXPRESS;Database=SUSDB;", NULL, NULL);
- 
-   $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-}
+require('wsus_connect.php');
 
-catch( PDOException $e ) {
-	echo $e;
-   die( "Error connecting to SQL Server" ); 
-}
 
 //echo "Connected to SQL Server\n";
 

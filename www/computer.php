@@ -11,20 +11,15 @@ computer.php
 
 **********************************************************************/
 
+//require_once('config.php');
+
 //Хидер osTicket
 
 //require('staff.inc.php');
 //require_once(STAFFINC_DIR.'header.inc.php');
 
 echo "<meta name='tip-namespace' content='computer.status'>";
-
-?>
-
-
-
-<?php
 echo "<br />";
-
 echo "<link type='text/css' rel='stylesheet' href='css/monit.css'>";
 
 
@@ -47,17 +42,8 @@ echo "<br /><a class='refresh' href='index.php'><b>Компьютеры</b></a><
 
 
 
-try {
 
-$conn = new PDO("sqlsrv:Server=BD2\SQLEXPRESS;Database=SUSDB;", NULL, NULL);
- 
-   $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-}
-
-catch( PDOException $e ) {
-	echo $e;
-   die( "Error connecting to SQL Server" ); 
-}
+require('wsus_connect.php');
 
 //echo "Connected to SQL Server\n";
 
