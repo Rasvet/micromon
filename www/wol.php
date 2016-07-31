@@ -71,7 +71,7 @@ if ($row['PropertyName'] == 'MACAddress')
 //echo "<td>";
 $output = "";
 		//$MACAddr = $row['Value'];
-		$command = "C:\\xStuff\\GIT\\MicroMonitoring\\server\\wolcmd.exe ".$row['Value']." 192.168.223.0 255.255.255.0 7";
+		$command = "powershell.exe C:\\xStuff\\GIT\\MicroMonitoring\\server\\Send-WOL.ps1 ".$row['Value'];
 		exec($command, $output);
 		
 		echo "<br />".$output[1]."<br />";

@@ -1,6 +1,6 @@
 <#
-SonyTVRemote
-Version 0.2
+MicroMonitoring: Generate-remote-scripts
+Version 1.5
 Description: Скрипт автоматической генерации скриптов для мониторинга.
 Pavel Satin (c) 2015
 pslater.ru@gmail.com

@@ -1,19 +1,19 @@
 <#
-MicroMonitoring
+MicroMonitoring: client-task
 Version 1.4
 
-Description: Клиентский скрипт отправки состояния (Windows 7/8/10).
+Description: Клиентский скрипт отправки состояния.
 
 Pavel Satin (c) 2014
 pslater.ru@gmail.com
 #>
 
 
-$url = 'http://www.mkucou.ru:8383'
-$urlScript = 'http://www.mkucou.ru/monitoring/Scripts/remote-script-' + $env:computername + '.ps1'
+$url = 'http://192.168.0.170:8383'
+$urlScript = 'http://192.168.0.170/status/Scripts/remote-script-' + $env:computername + '.ps1'
 $localScript = 'c:\Scripts\remote-script-' + $env:computername + '.ps1'
 $localLog = 'c:\Scripts\remote-script-' + $env:computername + '.log'
-$LocalCert = Get-AuthenticodeSignature c:\Scripts\client-wks.ps1
+$LocalCert = Get-AuthenticodeSignature c:\Scripts\client-task.ps1
 
 
 
@@ -108,12 +108,27 @@ $wscDefinition = @"
         }
 "@
 
-$wscType=Add-Type -memberDefinition $wscDefinition -name "wscType" -UsingNamespace "System.Reflection","System.Diagnostics" -PassThru
-
 $inventory = Get-WmiObject Win32_OperatingSystem | Select-Object Caption, Version, Description, InstallDate, lastbootuptime, SerialNumber, CSDVersion
 
-$antivirus = Get-AntiVirusProduct
 
+if ($inventory.Caption.Contains("Server")) {
+
+#$antivirus = Get-AntiVirusProduct
+
+$data = ("{`"Report_DateTime`":`"" + [System.DateTime]::Now + "`"," +
+"`"Computer_Name`":`"" + $env:computername + "`"," +
+"`"Domain_Name`":`"" + $env:userdnsdomain + "`"," +
+"`"Computer_Description`":`"" + $inventory.Description + "`"," +
+"`"OS_Name`":`"" + $inventory.Caption + "`"," +
+"`"Ver_OS`":`"" + $inventory.Version + "`"," +
+"`"OS_SP`":`"" + $inventory.CSDVersion + "`"," +
+"`"Install_OS_Date`":`"" + [System.Management.ManagementDateTimeconverter]::ToDateTime($inventory.InstallDate) +"`"}")
+
+
+} else {
+
+$wscType=Add-Type -memberDefinition $wscDefinition -name "wscType" -UsingNamespace "System.Reflection","System.Diagnostics" -PassThru
+$antivirus = Get-AntiVirusProduct
 
 $data = ("{`"Report_DateTime`":`"" + [System.DateTime]::Now + "`"," +
 "`"Computer_Name`":`"" + $env:computername + "`"," +
@@ -134,22 +149,21 @@ $data = ("{`"Report_DateTime`":`"" + [System.DateTime]::Now + "`"," +
 "`"User_Account_Control`":`"" + $wscType[0]::GetSecurityProviderHealth($wscType[1]::WSC_SECURITY_PROVIDER_USER_ACCOUNT_CONTROL) + "`"," +
 "`"WSC_Service`":`"" + $wscType[0]::GetSecurityProviderHealth($wscType[1]::WSC_SECURITY_PROVIDER_SERVICE) + "`"}")
 
+}
+
+
+
+
+
 
 $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
-
 $cred = New-Object System.Net.NetworkCredential -ArgumentList $authUser,$authPass
-
 $request = [Net.WebRequest]::Create($url)
-
 $request.ServicePoint.Expect100Continue = $false
-
 $request.Credentials = $cred
 $request.ContentType = "application/json"
-
 $request.Method = "POST"
-
 $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
-
 $request.ContentLength = $bytes.Length
 
 $requestStream = [System.IO.Stream]$request.GetRequestStream()
@@ -157,6 +171,7 @@ $requestStream.write($bytes, 0, $bytes.Length)
 $requestStream.Close()
 
 $response = $request.GetResponse()
+
 
 ##################################################################
 #Скачиваем скрипт 
