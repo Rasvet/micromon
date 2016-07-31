@@ -10,8 +10,8 @@ $ActionScript = $args[0]
 $ComputerScript = $args[1]
 $ProductName = $args[2]
 
-$ScriptPath = 'C:\xStuff\GIT\MicroMonitoring\www\Scripts\'
-$ScriptTmpl = 'C:\xStuff\GIT\MicroMonitoring\server\templates\'
+$ScriptPath = 'C:\inetpub\wwwroot\status\Scripts\'
+$ScriptTmpl = 'C:\inetpub\wwwroot\status\Scripts\templates\'
 $ScriptPathFile = $ScriptPath + 'remote-script-' + $ComputerScript + '.ps1'
 
 # Удаляем старый скрипт

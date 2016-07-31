@@ -1,4 +1,19 @@
 <?php
+
+/*********************************************************************
+ 
+computer_action.php
+Генерация скрипта для удаленного клиента.
+
+
+Павел Сатин <pslater.ru@gmail.com>
+ 22.10.2015
+  
+
+**********************************************************************/
+
+require_once('config.php');
+
 $str_q = $_GET["computer"];
 if (!$str_q)
 {
@@ -22,9 +37,8 @@ else
 	$sctC = explode(".",$str_q);
 	//echo $sctC[0];
 	$output = "";
-	
-	$command = "powershell.exe C:\\xStuff\\GIT\\MicroMonitoring\\server\\Generate-remote-scripts.ps1 ".$str_q2." ".$sctC[0]."";
-	//echo $command;
+
+	$command = $commandGenScript .$str_q2." ".$sctC[0]."";
 	exec($command, $output);
 		
 	echo "<br />".print_r($output)."<br />";

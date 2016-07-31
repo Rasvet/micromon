@@ -12,12 +12,7 @@ wol.php
 
 **********************************************************************/
 
-
-
-?>
-
-
-<?php
+require_once('config.php');
 
 
 $str_q = $_GET["computer"];
@@ -62,7 +57,7 @@ if ($row['PropertyName'] == 'MACAddress')
 //echo "<td>";
 $output = "";
 		//$MACAddr = $row['Value'];
-		$command = "powershell.exe C:\\xStuff\\GIT\\MicroMonitoring\\server\\Send-WOL.ps1 ".$row['Value'];
+		$command = $commandWOL .$row['Value'];
 		exec($command, $output);
 		
 		echo "<br />".$output[1]."<br />";

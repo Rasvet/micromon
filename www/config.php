@@ -1,5 +1,16 @@
 <?php
 
+/*********************************************************************
+ 
+config.php
+Настройки
+
+
+Павел Сатин <pslater.ru@gmail.com>
+ 22.10.2015
+  
+
+**********************************************************************/
 
 $host = 'localhost'; // имя хоста 
 $database = 'micromon'; // имя базы данных 
@@ -13,6 +24,8 @@ $domaingateway2 = "gatewayhostname:s:ukrgo.remotewebaccess.com\r\n";
 $domainname3 = 'RKM';
 $domaingateway3 = "gatewayhostname:s:ukrgo-rkm.remotewebaccess.com\r\n";
 
+$commandGenScript = "powershell.exe .\Generate-remote-scripts.ps1 ";
+$commandWOL = "powershell.exe .\Send-WOL.ps1 ";
 
 
 
@@ -30,6 +43,6 @@ function Escape_win ($path) {
  "\U0422"=>"Т", "\U0423"=>"У", "\U0424"=>"Ф", "\U0425"=>"Х", "\U0426"=>"Ц", "\U0427"=>"Ч", "\U0428"=>"Ш", 
  "\U0429"=>"Щ", "\U042A"=>"Ъ", "\U042B"=>"Ы", "\U042C"=>"Ь", "\U042D"=>"Э", "\U042E"=>"Ю", "\U042F"=>"Я")); 
  }
- 
+
 
 ?>
