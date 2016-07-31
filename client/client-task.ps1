@@ -9,11 +9,12 @@ pslater.ru@gmail.com
 #>
 
 
-$url = 'http://192.168.0.170:8383'
-$urlScript = 'http://192.168.0.170/status/Scripts/remote-script-' + $env:computername + '.ps1'
+$url = 'http://212.220.216.82:8383/'
+$urlScript = 'http://212.220.216.82/status/Scripts/remote-script-' + $env:computername + '.ps1'
 $localScript = 'c:\Scripts\remote-script-' + $env:computername + '.ps1'
 $localLog = 'c:\Scripts\remote-script-' + $env:computername + '.log'
-$LocalCert = Get-AuthenticodeSignature c:\Scripts\client-task.ps1
+$this_script = 'c:\Scripts\client-task.ps1'
+
 
 
 
@@ -151,30 +152,57 @@ $data = ("{`"Report_DateTime`":`"" + [System.DateTime]::Now + "`"," +
 
 }
 
+$psver = $PSVersionTable.PSVersion.Major
 
+if ($psver -ge 3) {
+    Write-Host "Powershell version: " $psver
+    Write-Host "Use Invoke-WebRequest"
 
+    #Invoke-RestMethod -Method Post -Uri $url -Body $data -Header @{"X-ContentType"="application/json"}
 
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
+    
+    [System.Net.ServicePointManager]::MaxServicePointIdleTime = 10000
+    Invoke-WebRequest -UseBasicParsing $url -ContentType "application/json" -Method POST -Body $bytes
 
+} else {
+    Write-Host "Powershell version: " $psver
+    Write-Host "Use System.Net.WebRequest"
 
-$bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
-$cred = New-Object System.Net.NetworkCredential -ArgumentList $authUser,$authPass
-$request = [Net.WebRequest]::Create($url)
-$request.ServicePoint.Expect100Continue = $false
-$request.Credentials = $cred
-$request.ContentType = "application/json"
-$request.Method = "POST"
-$bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
-$request.ContentLength = $bytes.Length
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
 
-$requestStream = [System.IO.Stream]$request.GetRequestStream()
-$requestStream.write($bytes, 0, $bytes.Length)
-$requestStream.Close()
+    #$password = ConvertTo-SecureString $wpassword -AsPlainText -Force
+    #$credential = New-Object System.Management.Automation.PSCredential ($wusername, $password)
 
-$response = $request.GetResponse()
+    $request = [System.Net.WebRequest]::Create($url)
+    $request.ContentType = "application/json"
+    $request.Method = "POST"
+    #$request.Credentials = $credential
 
+    #$request | Get-Member  #for a list of methods and properties 
+
+    try
+    {
+        $requestStream = $request.GetRequestStream()
+        $streamWriter = New-Object System.IO.StreamWriter($requestStream)
+        $streamWriter.Write($bytes)
+    }
+
+    finally
+    {
+        if ($null -ne $streamWriter) { $streamWriter.Dispose() }
+        if ($null -ne $requestStream) { $requestStream.Dispose() }
+    }
+
+    $res = $request.GetResponse()
+
+}
 
 ##################################################################
-#Скачиваем скрипт 
+#Скачиваем скрипт
+
+$LocalCert = Get-AuthenticodeSignature $this_script
+
 Remove-Item $localScript
 
 #В powershell 2.0 нет Invoke-WebRequest

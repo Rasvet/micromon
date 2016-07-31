@@ -17,12 +17,12 @@ $database = 'micromon'; // имя базы данных
 $user = 'micromon_user'; // имя пользователя
 $pswd = 'Z123456z'; // пароль
 
-$domainname1 = 'MKUCOU';
-$domaingateway1 = "gatewayhostname:s:rdp.mkucou.ru\r\n";
-$domainname2 = 'UKRGO';
-$domaingateway2 = "gatewayhostname:s:ukrgo.remotewebaccess.com\r\n";
-$domainname3 = 'RKM';
-$domaingateway3 = "gatewayhostname:s:ukrgo-rkm.remotewebaccess.com\r\n";
+$domainname1 = 'DOMAIN1';
+$domaingateway1 = "gatewayhostname:s:rdp.domin1.ru\r\n";
+$domainname2 = 'DOMAIN2';
+$domaingateway2 = "gatewayhostname:s:rdp.domin2.ru\r\n";
+$domainname3 = 'DOMAIN3';
+$domaingateway3 = "gatewayhostname:s:rdp.domin3.ru\r\n";
 
 $commandGenScript = "powershell.exe .\Generate-remote-scripts.ps1 ";
 $commandWOL = "powershell.exe .\Send-WOL.ps1 ";
