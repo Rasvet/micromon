@@ -1,4 +1,4 @@
-<#
+﻿<#
 MicroMonitoring: Generate-remote-scripts
 Version 1.5
 Description: Скрипт автоматической генерации скриптов для мониторинга.
@@ -17,7 +17,8 @@ $ScriptPathFile = $ScriptPath + 'remote-script-' + $ComputerScript + '.ps1'
 # Удаляем старый скрипт
 Remove-Item $ScriptPathFile
 
-	$scriptNumber = Get-Random -maximum 999999 -minimum 100000
+
+	$scriptNumber = [guid]::NewGuid()
 	$scriptNumberStr = "#" + $scriptNumber
 
 ###########################################################################
@@ -25,17 +26,17 @@ Remove-Item $ScriptPathFile
 if ($ActionScript -eq 'reboot')
 {
 
-	Add-Content -path $ScriptPathFile -value $scriptNumberStr
-	Add-Content -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: reboot'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $scriptNumberStr
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: reboot'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 $str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 
-	Add-Content -path $ScriptPathFile -value $str
-	Add-Content -path $ScriptPathFile -value '{'
-	Add-Content -path $ScriptPathFile -value '	Restart-Computer'
-	Add-Content -path $ScriptPathFile -value '}'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $str
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '{'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '	Restart-Computer'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '}'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 	
 	Set-AuthenticodeSignature $ScriptPathFile @(Get-ChildItem cert:\CurrentUser\My -codesign)[0]
@@ -48,17 +49,17 @@ $str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 if ($ActionScript -eq 'shutdown')
 {
 
-	Add-Content -path $ScriptPathFile -value $scriptNumberStr
-	Add-Content -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: shutdown'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $scriptNumberStr
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: shutdown'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 $str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 
-	Add-Content -path $ScriptPathFile -value $str
-	Add-Content -path $ScriptPathFile -value '{'
-	Add-Content -path $ScriptPathFile -value '	Stop-Computer'
-	Add-Content -path $ScriptPathFile -value '}'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $str
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '{'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '	Stop-Computer'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '}'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 	
 	Set-AuthenticodeSignature $ScriptPathFile @(Get-ChildItem cert:\CurrentUser\My -codesign)[0]
@@ -71,19 +72,19 @@ $str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 if ($ActionScript -eq 'installupdates')
 {
 
-	Add-Content -path $ScriptPathFile -value $scriptNumberStr
-	Add-Content -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: installupdates'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $scriptNumberStr
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: installupdates'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 	$str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 
-	Add-Content -path $ScriptPathFile -value $str
-	Add-Content -path $ScriptPathFile -value '{'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $str
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '{'
 
-	$str2 = gc $ScriptTmpl + 'installupdates.txt'
+	$strTemplate = $ScriptTmpl + 'installupdates.txt'
 
-	Add-Content -path $ScriptPathFile -value $str2
-	Add-Content -path $ScriptPathFile -value '}'
+	gc $strTemplate |	Add-Content -Encoding UTF8 -path $ScriptPathFile
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '}'
 
 	Set-AuthenticodeSignature $ScriptPathFile @(Get-ChildItem cert:\CurrentUser\My -codesign)[0]
 
@@ -95,23 +96,23 @@ if ($ActionScript -eq 'installupdates')
 if ($ActionScript -eq 'uninstallproduct')
 {
 
-	Add-Content -path $ScriptPathFile -value $scriptNumberStr
-	Add-Content -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: uninstallproduct'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $scriptNumberStr
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '# Автоматический сгенерированный скрипт, действие: uninstallproduct'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 $str = 'if ($env:computername -eq "' + $ComputerScript + '")'
 
-	Add-Content -path $ScriptPathFile -value $str
-	Add-Content -path $ScriptPathFile -value '{'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $str
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '{'
 
 $str2 = "	`$app = Get-WmiObject win32_product | Where-Object {`$_.name -match ""$ProductName""}"
 
-	Add-Content -path $ScriptPathFile -value $str2
-	Add-Content -path $ScriptPathFile -value "	`$app.uninstall() | Select-Object -Property returnvalue"
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value $str2
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value "	`$app.uninstall() | Select-Object -Property returnvalue"
 
 	
-	Add-Content -path $ScriptPathFile -value '}'
-	Add-Content -path $ScriptPathFile -value ''
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value '}'
+	Add-Content -Encoding UTF8 -path $ScriptPathFile -value ''
 
 	
 	Set-AuthenticodeSignature $ScriptPathFile @(Get-ChildItem cert:\CurrentUser\My -codesign)[0]
