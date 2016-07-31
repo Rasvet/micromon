@@ -9,8 +9,8 @@ pslater.ru@gmail.com
 #>
 
 
-$url = 'http://212.220.216.82:8383/'
-$urlScript = 'http://212.220.216.82/status/Scripts/remote-script-' + $env:computername + '.ps1'
+$url = 'http://192.168.0.170:8383/'
+$urlScript = 'http://192.168.0.170/status/Scripts/remote-script-' + $env:computername + '.ps1'
 $localScript = 'c:\Scripts\remote-script-' + $env:computername + '.ps1'
 $localLog = 'c:\Scripts\remote-script-' + $env:computername + '.log'
 $this_script = 'c:\Scripts\client-task.ps1'
@@ -158,18 +158,23 @@ if ($psver -ge 3) {
     Write-Host "Powershell version: " $psver
     Write-Host "Use Invoke-WebRequest"
 
-    #Invoke-RestMethod -Method Post -Uri $url -Body $data -Header @{"X-ContentType"="application/json"}
-
     $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
-    
-    [System.Net.ServicePointManager]::MaxServicePointIdleTime = 10000
-    Invoke-WebRequest -UseBasicParsing $url -ContentType "application/json" -Method POST -Body $bytes
+
+    try {
+        $request = Invoke-WebRequest -Uri $url -Body $bytes -Method:Post -ContentType "application/json" -TimeoutSec 10 -ErrorAction:Stop
+    }
+    catch [System.Exception] {
+        $errorstr = $_.Exception.toString()
+        Write-Host $errorstr
+    }
+
 
 } else {
     Write-Host "Powershell version: " $psver
     Write-Host "Use System.Net.WebRequest"
 
     $bytes = [System.Text.Encoding]::UTF8.GetBytes($data)
+    [System.Net.ServicePointManager]::MaxServicePointIdleTime = 1000
 
     #$password = ConvertTo-SecureString $wpassword -AsPlainText -Force
     #$credential = New-Object System.Management.Automation.PSCredential ($wusername, $password)
